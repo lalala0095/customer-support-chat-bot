@@ -21,7 +21,7 @@ The server can be cloned from a Github repository. Execute the following steps i
 
 1. This clones the Github repository.
 ```bash
-git clone -b backend https://github.com/lalala0095/ai-chat-bot-clone
+git clone -b backend https://github.com/lalala0095/customer-support-chat-bot
 ```
 
 2. Go to the created directory.
