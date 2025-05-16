@@ -1,0 +1,20 @@
+[
+    {
+        "order_id": 1,
+        "item": "MacBook",
+        "status": "Shipped",
+        "thumbnail": "https://alephksa.com/cdn/shop/files/MacBook_Pro_13_in_Space_Grey_PDP_Image_Position-1_caEN_e914d662-7b87-4e1a-b809-a4b948bcefb2.jpg?v=1688740111&width=1445"
+    },
+    {
+        "order_id": 2,
+        "item": "Samsung Galaxy Z Flip 6",
+        "status": "Processing",
+        "thumbnail": "https://images.samsung.com/ph/smartphones/galaxy-z-flip6/buy/product_color_blue_PC_v2.png"
+    },
+    {
+        "order_id": 3,
+        "item": "Keychron K6",
+        "status": "Delivered",
+        "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4jYhEFM16nA8TCI58unhAjZAx1oo3BOGHlw&s"
+    }
+]

@@ -12,7 +12,8 @@ mongodb_client = AsyncMongoClient(MONGO_DB_URI)
 db = mongodb_client[MONGO_DB_NAME]
 
 chats_collection = db["chats"]
-support_tickets = db["support_tickets"]
+support_tickets_collection = db["support_tickets"]
+orders_collection = db["orders"]
 
 gemini_api_key = os.getenv("GEMINI_API_KEY")
 gemini_client = genai.Client(api_key=gemini_api_key)
