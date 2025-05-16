@@ -29,7 +29,7 @@ const ChatBot: React.FC = () => {
     setMessages((prev) => [...prev, userMessage]);
 
     try {
-      const res = await axios.post("http://localhost:8000/chat", {
+      const res = await axios.post("https://stevens-managers-tariff-that.trycloudflare.com/chat", {
         message: input,
         session_id: session_id,
       }, {

@@ -20,7 +20,7 @@ const OrdersPage: React.FC = () => {
 
   const fetchOrders = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/orders", {
+      const res = await axios.get("https://stevens-managers-tariff-that.trycloudflare.com/orders", {
         headers: { "Content-Type": "application/json" },
       });
       setOrders(res.data.orders);    
