@@ -72,18 +72,19 @@ const OrdersPage: React.FC = () => {
 
       {/* Floating Chat Head */}
       <button
-        onClick={() => setIsChatOpen(!isChatOpen)}
+        onClick={() => setIsChatOpen((prev) => !prev)}
         className="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-full shadow-lg transition"
+        aria-label={isChatOpen ? "Close Chat": "Open Chat"}
       >
         <BiBot size={28} />
       </button>
 
       {/* ChatBot Popup */}
-      {isChatOpen && (
-        <div className="fixed bottom-20 right-6 w-80 max-w-full z-50">
+      <div className="fixed bottom-20 right-6 w-80 max-w-full z-50">
+        <div className={isChatOpen ? "block" : "hidden"}>
           <ChatBot />
         </div>
-      )}
+      </div>
     </div>
   );
 };

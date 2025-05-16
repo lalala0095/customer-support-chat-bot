@@ -1,5 +1,5 @@
-// components/ChatBot.tsx
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import axios from "axios";
 
 type Message = {
   text: string;
@@ -10,19 +10,48 @@ const ChatBot: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
 
-  const sendMessage = () => {
-    if (!input.trim()) return;
-    const userMessage: Message = { text: input, sender: "user" };
-    const botReply: Message = { text: `You said: "${input}"`, sender: "bot" };
-    setMessages([...messages, userMessage, botReply]);
-    setInput("");
-  };
+  const sessionIdRef = useRef<string>(crypto.randomUUID());
+  const session_id = sessionIdRef.current;
 
   useEffect(() => {
-    setMessages([
-      {text: "Hi there! How can I assist you today?", sender: "bot"},
-    ])
-  })
+    // Default bot greeting on load
+    const greeting: Message = {
+      text: "Hi there! I'm your assistant. How can I help you today?",
+      sender: "bot",
+    };
+    setMessages([greeting]);
+  }, []);
+
+  const sendMessage = async () => {
+    if (!input.trim()) return;
+
+    const userMessage: Message = { text: input, sender: "user" };
+    setMessages((prev) => [...prev, userMessage]);
+
+    try {
+      const res = await axios.post("http://localhost:8000/chat", {
+        message: input,
+        session_id: session_id,
+      }, {
+        headers: { "Content-Type": "application/json" },
+      }
+      );
+
+      const botReply: Message = {
+        text: res.data.reply || "Sorry, I didn't get that.",
+        sender: "bot",
+      };
+
+      setMessages((prev) => [...prev, botReply]);
+    } catch (error) {
+      setMessages((prev) => [
+        ...prev,
+        { text: "Error: Unable to connect to server.", sender: "bot" },
+      ]);
+    }
+
+    setInput("");
+  };
 
   return (
     <div className="w-full max-w-sm rounded-lg shadow p-4 bg-white flex flex-col h-[500px]">
