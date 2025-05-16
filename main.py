@@ -121,6 +121,9 @@ async def chat_with_bot(chat_body: ChatModel):
                 "Start the conversation by asking the customer's name, and what Order is he/she having troubles with.",
                 "If you can't understand the user's inquiry due to lack of details about the order, you can capture details using verify_order_details function.",
                 "User might not be able to send the order_id for the verify_order_details, do not force the user, instead you can retrieve all of the order details using verify_all_order_details function."
+                "If you are verifying the order details or creating the support ticket, do not tell the user to wait.",
+                "If the status = 'In Transit', the user can't return the item. It needs to be delivered first.",
+                "If the status = 'Processing', it is still in the hands of the supplier, nothing we can do aside from cancellation.",
                 "Converse with the user with courtesy and patience. If the issue needs escalation, ask the user if it's fine to escalate and generate a ticket."
             ]
             new_chats = []
@@ -162,11 +165,19 @@ async def chat_with_bot(chat_body: ChatModel):
                     {"_id": session_id}, 
                     {"$addToSet": {"chats": {"role": "system", "message": order_details}}}
                 )
+                await chats_collection.update_one(
+                    {"_id": session_id}, 
+                    {"$addToSet": {"chats": {"role": "system", "message": "Continue with the conversation with the user."}}}
+                )
             elif function_call.name == "verify_all_order_details":
                 all_order_details = await verify_all_order_details()
                 await chats_collection.update_one(
                     {"_id": session_id}, 
                     {"$addToSet": {"chats": {"role": "system", "message": all_order_details}}}
+                )
+                await chats_collection.update_one(
+                    {"_id": session_id}, 
+                    {"$addToSet": {"chats": {"role": "system", "message": "Continue with the conversation with the user."}}}
                 )
             else:
                 reply = await create_support_ticket(**function_call.args)
@@ -175,7 +186,7 @@ async def chat_with_bot(chat_body: ChatModel):
                     {"_id": session_id}, 
                     {"$addToSet": {"chats": {"role": "model", "message": reply}}}
                     )
-                chat_proceed = True
+                return {"reply": reply}
         else:
             reply = response.text
             print("now appending reply to the chats history")
@@ -183,7 +194,5 @@ async def chat_with_bot(chat_body: ChatModel):
                 {"_id": session_id}, 
                 {"$addToSet": {"chats": {"role": "model", "message": reply}}}
                 )
-            chat_proceed = True
-
-        return {"reply": reply}
+            return {"reply": reply}
 
